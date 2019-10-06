@@ -37,6 +37,7 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
         for filename in os.listdir(os.getcwd()):
             os.startfile(os.getcwd() + '\\' + filename)
             sleep(3)
+            print('rer')
 
 
 
