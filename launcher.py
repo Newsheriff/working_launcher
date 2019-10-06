@@ -34,9 +34,13 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
         # results.show()
         # for file in listWidget:
         #    os.startfile(file)
-        for filename in os.listdir(os.getcwd()):
-            os.startfile(os.getcwd() + '\\' + filename)
-            sleep(3)
+        files = []
+        for index in range(self.listWidget.count()):
+            files.append(self.listWidget.item(index))
+        print(files)
+        for filename in files:
+            os.startfile(os.path.realpath(filename.text()) + '\\' + str(filename))
+            sleep(2)
 
 
 
@@ -50,6 +54,7 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
         if folder:
             for file in os.listdir(folder):
                 self.listWidget.addItem(file)
+
 
 
 
