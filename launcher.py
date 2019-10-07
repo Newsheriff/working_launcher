@@ -5,6 +5,7 @@ import sys
 from PySide2 import QtWidgets
 from time import sleep
 from pathlib import Path
+import psutil
 
 # Окошко с результатом проверки
 class Results(QtWidgets.QWidget, Ui_Results):
@@ -31,12 +32,15 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
 
     # Определяем функции кнопок
     def check_updates(self):
-        # results.show()
-        # for file in listWidget:
-        #    os.startfile(file)
-        for filename in os.listdir(os.getcwd()):
-            os.startfile(os.getcwd() + '\\' + filename)
-            sleep(3)
+        #for filename in os.listdir(os.getcwd()):
+        #    os.startfile(os.getcwd() + '\\' + filename)
+        #    sleep(3)
+        PROCNAME = "GameClient.exe"
+
+        for proc in psutil.process_iter():
+            # check whether the process name matches
+            if proc.name() == PROCNAME:
+                proc.kill()
 
 
 
