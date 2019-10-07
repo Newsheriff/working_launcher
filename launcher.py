@@ -5,7 +5,7 @@ import sys
 from PySide2 import QtWidgets
 from time import sleep
 from pathlib import Path
-import psutil
+#import psutil
 
 # Окошко с результатом проверки
 class Results(QtWidgets.QWidget, Ui_Results):
@@ -32,31 +32,28 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
 
     # Определяем функции кнопок
     def check_updates(self):
-        #for filename in os.listdir(os.getcwd()):
-        #    os.startfile(os.getcwd() + '\\' + filename)
-        #    sleep(3)
-        PROCNAME = "GameClient.exe"
-
-        for proc in psutil.process_iter():
-            # check whether the process name matches
-            if proc.name() == PROCNAME:
-                proc.kill()
+        # PROCNAME = "GameClient.exe"
+        #
+        # for proc in psutil.process_iter():
+        #     # check whether the process name matches
+        #     if proc.name() == PROCNAME:
+        #         proc.kill()
+        for filepath in self.clients:
+            os.startfile(filepath)
+            sleep(3)
 
 
 
 
 
     def select_files(self):
-        # Если в списке что-то было, сбрасываем его
-        self.listWidget.clear()
-        # Задаем переменную для папки с клиентами для обновления
-        folder = QtWidgets.QFileDialog.getExistingDirectory(self, 'Выберите папку')
-        if folder:
-            for file in os.listdir(folder):
-                self.listWidget.addItem(file)
+        # Находим файл
+        file = QtWidgets.QFileDialog.getOpenFileName(self, "Open File")
+        # Добавляем файл в листвиджет и в список клиентов, отрезаем от названий все лишнее
+        self.listWidget.addItem(str(file).strip('(').strip("'")[:-19])
+        self.clients.append(str(file).strip('(').strip("'")[:-19])
 
-
-
+    clients = []
 
 
 
