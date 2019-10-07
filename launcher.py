@@ -4,8 +4,7 @@ import os
 import sys
 from PySide2 import QtWidgets
 from time import sleep
-from pathlib import Path
-#import psutil
+import psutil
 
 # Окошко с результатом проверки
 class Results(QtWidgets.QWidget, Ui_Results):
@@ -32,15 +31,15 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
 
     # Определяем функции кнопок
     def check_updates(self):
-        # PROCNAME = "GameClient.exe"
-        #
-        # for proc in psutil.process_iter():
-        #     # check whether the process name matches
-        #     if proc.name() == PROCNAME:
-        #         proc.kill()
+        # Задаем процесс, за которым будем охотиться
+        PROCNAME = "notepad.exe"
+        # Создаем цикл запуска и убийства процесса
         for filepath in self.clients:
             os.startfile(filepath)
             sleep(3)
+            for process in psutil.process_iter():
+                if process.name() == PROCNAME:
+                    process.kill()
 
 
 
@@ -53,6 +52,8 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
         self.listWidget.addItem(str(file).strip('(').strip("'")[:-19])
         self.clients.append(str(file).strip('(').strip("'")[:-19])
 
+
+    # Список клиентов, которые будут запускаться
     clients = []
 
 
