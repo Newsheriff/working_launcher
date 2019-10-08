@@ -34,12 +34,14 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
         # Задаем процесс, за которым будем охотиться
         PROCNAME = "notepad.exe"
         # Создаем цикл запуска и убийства процесса
-        for filepath in self.clients:
-            os.startfile(filepath)
-            sleep(3)
-            for process in psutil.process_iter():
-                if process.name() == PROCNAME:
-                    process.kill()
+        with open(r'C:\Users\Admin\Desktop\Python projects\Pyside2 GUI\clients.txt') as clients_kill:
+            clients_kill_splitted = [line.rstrip('\n') for line in clients_kill]
+            for line in clients_kill_splitted:
+                os.startfile(line)
+                sleep(3)
+                for process in psutil.process_iter():
+                    if process.name() == PROCNAME:
+                        process.kill()
 
 
 
@@ -48,9 +50,18 @@ class Launcher(QtWidgets.QMainWindow, Ui_MainWindow, Results):
     def select_files(self):
         # Находим файл
         file = QtWidgets.QFileDialog.getOpenFileName(self, "Open File")
-        # Добавляем файл в листвиджет и в список клиентов, отрезаем от названий все лишнее
-        self.listWidget.addItem(str(file).strip('(').strip("'")[:-19])
-        self.clients.append(str(file).strip('(').strip("'")[:-19])
+        # отрезаем от названия все лишнее
+        added_file = str(file).strip('(').strip("'")[:-19]
+        # Проверяем, есть ли файл в списке клиентов и если нет, добавляем его в листвиджет
+        with open(r'C:\Users\Admin\Desktop\Python projects\Pyside2 GUI\clients.txt', 'r') as clients_check:
+            if added_file not in clients_check.read():
+                self.listWidget.addItem(added_file)
+        # Проверяем, есть ли файл в списке клиентов и если нет, добавляем его в список клиентов, чтобы с ним можно было работать
+        with open(r'C:\Users\Admin\Desktop\Python projects\Pyside2 GUI\clients.txt', 'a') as clients:
+            with open(r'C:\Users\Admin\Desktop\Python projects\Pyside2 GUI\clients.txt', 'r') as clients_check:
+                if added_file not in clients_check.read():
+                    clients.write(added_file + '\n')
+        self.clients.append(added_file)
 
 
     # Список клиентов, которые будут запускаться
